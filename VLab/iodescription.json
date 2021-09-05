@@ -1,0 +1,59 @@
+{
+    "inputs": [   
+       {
+        "id": "DataObject_0k4b4a1",
+        "inputType": "individual",
+        "valueType": "value",
+        "description": "Population count per census zone",
+        "name": "POP vector input",
+        "obligation": true,
+        "hasDefault": false,
+        "valueSchema": "url",
+        "target": "POPBari_2020.zip"
+     },
+       {
+        "id": "DataObject_0k4b4a2",
+        "inputType": "individual",
+        "valueType": "value",
+        "description": "Urban Atlas from Copernicus Land Monitoring Service",
+        "name": "Urban Atlas",
+        "obligation": true,
+        "hasDefault": false,
+        "valueSchema": "url",
+        "target": "UrbanAtlas.zip"
+     },
+	    {
+        "id": "DataObject_0k4b4a3",
+        "inputType": "individual",
+        "valueType": "value",
+        "description": "Binary Built-up map",
+        "name": "Buildings",
+        "obligation": true,
+        "hasDefault": false,
+        "valueSchema": "url",
+        "target": "Buildings.zip"
+     },	 
+        {
+        "id": "DataObject_0k4b4a4",
+        "inputType": "individual",
+        "valueType": "value",
+        "description": "Building heights",
+		"name": "Building heights",
+        "obligation": true,
+        "hasDefault": false,
+        "valueSchema": "url",
+        "target": "LIDAR_heights.zip"
+     }
+      ],
+    "outputs": [
+        {
+        "id": "DataObject_0k4b4b1",
+        "outputType": "individual",
+        "valueType": "value",
+        "description": "Grid population map (100 m x 100 m)",
+		"name": "POP_GRID",
+        "valueSchema": "url",
+        "target": "POP_GRID.gpkg"
+     }	 
+      ]
+}

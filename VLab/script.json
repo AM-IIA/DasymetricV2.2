@@ -1,0 +1,14 @@
+{
+    "scripts": [
+      {
+        "repoPath": "Dasy_v2_Workflow.sh",
+        "targetPath": "Dasy_v2_Workflow.sh",
+        "pathType": "FILE"
+   },
+      {
+        "repoPath": "DasymetricV2.py",
+        "targetPath": "DasymetricV2.py",
+        "pathType": "FILE"
+   }
+    ]
+}
