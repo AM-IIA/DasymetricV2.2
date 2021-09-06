@@ -65,6 +65,7 @@ alg_params = {
 outputs['EstrairitagliaDaEstensione'] = processing.run('native:extractbyextent', alg_params)
 
 # Calcolatore campi_class
+Processing.initialize()
 alg_params = {
     'FIELD_LENGTH': 10,
     'FIELD_NAME': 'BUclass',
@@ -77,6 +78,7 @@ alg_params = {
 outputs['CalcolatoreCampi_class'] = processing.run('qgis:fieldcalculator', alg_params)
 
 # Calcolatore di campi_Factor #ATTENZIONE:per questa parte mi piacerebbe inserire una personalizzazione dei parametri da parte dell'utente(vedi allegato)
+Processing.initialize()
 alg_params = {
     'FIELD_LENGTH': 2,
     'FIELD_NAME': 'Factor',
@@ -157,6 +159,7 @@ alg_params = {
 outputs['StatisticheZonaliHmean'] = processing.run('native:zonalstatistics', alg_params)
 
 # Calcolatore campo Voladj
+Processing.initialize()
 alg_params = {
     'FIELD_LENGTH': 10,
     'FIELD_NAME': 'VOL_subel',
@@ -201,6 +204,7 @@ alg_params = {
 outputs['UnisciAttributiSecondoIlValoreDelCampo'] = processing.run('native:joinattributestable', alg_params)
 
 # Calcolatore di campi_POPw
+Processing.initialize()
 alg_params = {
     'FIELD_LENGTH': 7,
     'FIELD_NAME': 'POPw',
