@@ -44,6 +44,7 @@ alg_params = {
 outputs['RiproiettaLayer'] = processing.run('native:reprojectlayer', alg_params)
 
 # Calcolatore di campi_censusID
+Processing.initialize()
 alg_params = {
     'FIELD_LENGTH': 10,
     'FIELD_NAME': 'CENSUS_ID',
