@@ -18,11 +18,11 @@ QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms())
 #input_output
 outputs = {}
 results = {}
-z = QgsVectorLayer("POPBari_2020.zip","POP","ogr")
+z = QgsVectorLayer("POPBari_2020.zip","POP","ogr","POP","ogr")
 if not z.isValid():
   print ("Vector layer (population census data) failed to load!")
-
-z1 = QgsVectorLayer("UrbanAtlas.zip","UrbanAtlas","ogr" )
+  
+z1 = QgsVectorLayer("UrbanAtlas.zip","UrbanAtlas","ogr"","UrbanAtlas","ogr" )
 if not z1.isValid():
     print ("Vector layer (Urban Atlas) failed to load!")
 
@@ -79,7 +79,7 @@ alg_params = {
 outputs['CalcolatoreCampi_class'] = processing.run('qgis:fieldcalculator', alg_params)
 
 # Calcolatore di campi_Factor #ATTENZIONE:per questa parte mi piacerebbe inserire una personalizzazione dei parametri da parte dell'utente(vedi allegato)
-Processing.initialize()
+#Processing.initialize()
 alg_params = {
     'FIELD_LENGTH': 2,
     'FIELD_NAME': 'Factor',
@@ -168,74 +168,97 @@ alg_params = {
     'FIELD_TYPE': 0,
     'FORMULA': '\"Factor\"*\"_count\"*100*\"Hint_mean\"',
     'INPUT': outputs['Int2']['OUTPUT'], #outputs['StatisticheZonaliHmean']['INPUT_VECTOR'],
-    'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+    'OUTPUT': "./out1.shp"
 }
 outputs['CalcolatoreCampoVoladj'] = processing.run('qgis:fieldcalculator', alg_params)
 
-# Crea indice spaziale_subel
-alg_params = {
-    'INPUT': outputs['CalcolatoreCampoVoladj']['OUTPUT']
-}
-outputs['CreaIndiceSpaziale_subel'] = processing.run('native:createspatialindex', alg_params)
+out1 = QgsVectorLayer("./out1.shp","out1","ogr")
+if not out1.isValid():
+  print ("out1 failed to load!")
 
-# Unisci attributi per posizione (riassunto VOLxCENSUS)
+# Dissolvi
 alg_params = {
-    'DISCARD_NONMATCHING': False,
-    'INPUT': outputs['CalcolatoreDiCampi_censusid']['OUTPUT'],#outputs['CreaIndiceSpaziale_subel']['OUTPUT'],
-    'JOIN': outputs['CalcolatoreCampoVoladj']['OUTPUT'],#outputs['CreaIndiceSpaziale_subel']['OUTPUT'],
-    'JOIN_FIELDS': ['VOL_subel'],
-    'PREDICATE': [0],
-    'SUMMARIES': [5],
-    'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+    'COMPUTE_AREA': False,
+    'COMPUTE_STATISTICS': True,
+    'COUNT_FEATURES': False,
+    'EXPLODE_COLLECTIONS': False,
+    'FIELD': 'CENSUS_ID',
+    'GEOMETRY': 'geometry',
+    'INPUT': out1,
+    'KEEP_ATTRIBUTES': False,
+    'OPTIONS': '',
+    'STATISTICS_ATTRIBUTE': 'Vol_subel',
+    'OUTPUT': "./outdiss1.shp"
 }
-outputs['UnisciAttributiPerPosizioneRiassuntoVolxcensus'] = processing.run('qgis:joinbylocationsummary', alg_params)
+outputs['Dissolvi'] = processing.run('gdal:dissolve', alg_params)
+
+outdiss1 = QgsVectorLayer("./outdiss1.shp","outdiss1","ogr")
+if not outdiss1.isValid():
+  print ("outdiss1 failed to load!")
 
 # Unisci attributi secondo il valore del campo
 alg_params = {
     'DISCARD_NONMATCHING': False,
     'FIELD': 'CENSUS_ID',
-    'FIELDS_TO_COPY': ['VOL_subel_sum'],
+    'FIELDS_TO_COPY': ['sum'],
     'FIELD_2': 'CENSUS_ID',
-    'INPUT': outputs['CalcolatoreCampoVoladj']['OUTPUT'],#outputs['CreaIndiceSpaziale_subel']['OUTPUT'],
-    'INPUT_2': outputs['UnisciAttributiPerPosizioneRiassuntoVolxcensus']['OUTPUT'],
+    'INPUT': outputs['CalcolatoreCampoVoladj']['OUTPUT'],
+    'INPUT_2': outputs['Dissolvi']['OUTPUT'],
     'METHOD': 1,
-    'PREFIX': '',
-    'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+    'PREFIX': 'Vol_subel',
+    'OUTPUT': "./out2.shp"
 }
 outputs['UnisciAttributiSecondoIlValoreDelCampo'] = processing.run('native:joinattributestable', alg_params)
 
-# Calcolatore di campi_POPw
-Processing.initialize()
+out2 = QgsVectorLayer("./out2.shp","out2","ogr")
+if not out2.isValid():
+  print ("out2 failed to load!")
+
+# Calcolatore di campiPOPw
 alg_params = {
-    'FIELD_LENGTH': 7,
+    'FIELD_LENGTH': 10,
     'FIELD_NAME': 'POPw',
+    'FIELD_PRECISION': 2,
+    'FIELD_TYPE': 0,
+    'FORMULA': ' ( \"POP\" *  \"VOL_subel\")/ (\"Vol_subels\")',
+    'INPUT': outputs['UnisciAttributiSecondoIlValoreDelCampo']['OUTPUT'],
+    'OUTPUT': "./out3.shp"
+}
+outputs['CalcolatoreDiCampipopw'] = processing.run('qgis:fieldcalculator', alg_params)
+
+out31 = QgsVectorLayer("./out3.shp","out3","ogr")
+if not out3.isValid():
+  print ("out3 failed to load!")   
+  
+# Dissolvi2
+alg_params = {
+    'COMPUTE_AREA': False,
+    'COMPUTE_STATISTICS': True,
+    'COUNT_FEATURES': False,
+    'EXPLODE_COLLECTIONS': False,
+    'FIELD': 'ID_1',
+    'GEOMETRY': 'geometry',
+    'INPUT': out31,
+    'KEEP_ATTRIBUTES': False,
+    'OPTIONS': '',
+    'STATISTICS_ATTRIBUTE': 'POPw',
+    'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT #"C:/Users/Utente/Desktop/Deliverable_SMURBS/VLAB/Data/outdiss29.shp"
+}
+outputs['Dissolvi2'] = processing.run('gdal:dissolve', alg_params)
+
+# Calcolatore di campi_finale
+alg_params = {
+    'FIELD_LENGTH': 10,
+    'FIELD_NAME': 'POPgrid',
     'FIELD_PRECISION': 3,
     'FIELD_TYPE': 0,
-    'FORMULA': '(\"POP\" * \"VOL_subel\")/\"VOL_subel_sum\"',
-    'INPUT': outputs['UnisciAttributiSecondoIlValoreDelCampo']['OUTPUT'],
-    'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+    'FORMULA': 'to_real(\"sum\")',
+    'INPUT': outputs['Dissolvi2']['OUTPUT'],
+    'OUTPUT': "./OUTPUT.gpkg"
 }
-outputs['CalcolatoreDiCampi_popw'] = processing.run('qgis:fieldcalculator', alg_params)
+outputs['CalcolatoreDiCampi_finale'] = processing.run('qgis:fieldcalculator', alg_params)
+results['Output'] = outputs['CalcolatoreDiCampi_finale']['OUTPUT']### RISULTATO DA SALVARE
 
-# Crea indice spaziale_popw
-alg_params = {
-    'INPUT': outputs['CalcolatoreDiCampi_popw']['OUTPUT']
-}
-outputs['CreaIndiceSpaziale_popw'] = processing.run('native:createspatialindex', alg_params)
-
-# Unisci attributi per posizione (riassunto POPxGRID)
-alg_params = {
-    'DISCARD_NONMATCHING': False,
-    'INPUT': outputs['CreaReticolo']['OUTPUT'],
-    'JOIN': outputs['CalcolatoreDiCampi_popw']['OUTPUT'],
-    'JOIN_FIELDS': ['POPw'],
-    'PREDICATE': [0],
-    'SUMMARIES': [5],
-    'OUTPUT': "POP_GRID.gpkg"
-}
-outputs['UnisciAttributiPerPosizioneRiassuntoPopxgrid'] = processing.run('qgis:joinbylocationsummary', alg_params)
-results['Output'] = outputs['UnisciAttributiPerPosizioneRiassuntoPopxgrid']['OUTPUT'] ### RISULTATO DA SALVARE
-##return results
 print('All done!')
 
 # Finally, exitQgis() is called to remove the
