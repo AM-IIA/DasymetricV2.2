@@ -22,7 +22,7 @@ z = QgsVectorLayer("POPBari_2020.zip","POP","ogr","POP","ogr")
 if not z.isValid():
   print ("Vector layer (population census data) failed to load!")
   
-z1 = QgsVectorLayer("UrbanAtlas.zip","UrbanAtlas","ogr"","UrbanAtlas","ogr" )
+z1 = QgsVectorLayer("UrbanAtlas.zip","UrbanAtlas","ogr","UrbanAtlas","ogr" )
 if not z1.isValid():
     print ("Vector layer (Urban Atlas) failed to load!")
 
