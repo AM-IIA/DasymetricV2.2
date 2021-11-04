@@ -50,7 +50,7 @@ alg_params = {
     'FIELD_NAME': 'CENSUS_ID',
     'FIELD_PRECISION': 0,
     'FIELD_TYPE': 1,
-    'FORMULA': ' $id ',+xz
+    'FORMULA': ' $id ',
     'INPUT': outputs['RiproiettaLayer']['OUTPUT'],
     'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
 }
