@@ -227,7 +227,7 @@ alg_params = {
 }
 outputs['CalcolatoreDiCampipopw'] = processing.run('qgis:fieldcalculator', alg_params)
 
-out31 = QgsVectorLayer("/home/out3.shp","out3","ogr")
+out3 = QgsVectorLayer("/home/out3.shp","out3","ogr")
 if not out3.isValid():
   print ("out3 failed to load!")   
   
@@ -239,7 +239,7 @@ alg_params = {
     'EXPLODE_COLLECTIONS': False,
     'FIELD': 'ID_1',
     'GEOMETRY': 'geometry',
-    'INPUT': out31,
+    'INPUT': out3,
     'KEEP_ATTRIBUTES': False,
     'OPTIONS': '',
     'STATISTICS_ATTRIBUTE': 'POPw',
