@@ -50,7 +50,7 @@ alg_params = {
     'FIELD_NAME': 'CENSUS_ID',
     'FIELD_PRECISION': 0,
     'FIELD_TYPE': 1,
-    'FORMULA': ' $id ',
+    'FORMULA': ' $id ',+xz
     'INPUT': outputs['RiproiettaLayer']['OUTPUT'],
     'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
 }
@@ -168,11 +168,11 @@ alg_params = {
     'FIELD_TYPE': 0,
     'FORMULA': '\"Factor\"*\"_count\"*100*\"Hint_mean\"',
     'INPUT': outputs['Int2']['OUTPUT'], #outputs['StatisticheZonaliHmean']['INPUT_VECTOR'],
-    'OUTPUT': "./out1.shp"
+    'OUTPUT': "out1.shp"
 }
 outputs['CalcolatoreCampoVoladj'] = processing.run('qgis:fieldcalculator', alg_params)
 
-out1 = QgsVectorLayer("./out1.shp","out1","ogr")
+out1 = QgsVectorLayer("out1.shp","out1","ogr")
 if not out1.isValid():
   print ("out1 failed to load!")
 
@@ -188,11 +188,11 @@ alg_params = {
     'KEEP_ATTRIBUTES': False,
     'OPTIONS': '',
     'STATISTICS_ATTRIBUTE': 'Vol_subel',
-    'OUTPUT': "./outdiss1.shp"
+    'OUTPUT': "outdiss1.shp"
 }
 outputs['Dissolvi'] = processing.run('gdal:dissolve', alg_params)
 
-outdiss1 = QgsVectorLayer("./outdiss1.shp","outdiss1","ogr")
+outdiss1 = QgsVectorLayer("outdiss1.shp","outdiss1","ogr")
 if not outdiss1.isValid():
   print ("outdiss1 failed to load!")
 
@@ -206,11 +206,11 @@ alg_params = {
     'INPUT_2': outputs['Dissolvi']['OUTPUT'],
     'METHOD': 1,
     'PREFIX': 'Vol_subel',
-    'OUTPUT': "./out2.shp"
+    'OUTPUT': "out2.shp"
 }
 outputs['UnisciAttributiSecondoIlValoreDelCampo'] = processing.run('native:joinattributestable', alg_params)
 
-out2 = QgsVectorLayer("./out2.shp","out2","ogr")
+out2 = QgsVectorLayer("out2.shp","out2","ogr")
 if not out2.isValid():
   print ("out2 failed to load!")
 
@@ -222,11 +222,11 @@ alg_params = {
     'FIELD_TYPE': 0,
     'FORMULA': ' ( \"POP\" *  \"VOL_subel\")/ (\"Vol_subels\")',
     'INPUT': outputs['UnisciAttributiSecondoIlValoreDelCampo']['OUTPUT'],
-    'OUTPUT': "./out3.shp"
+    'OUTPUT': "out3.shp"
 }
 outputs['CalcolatoreDiCampipopw'] = processing.run('qgis:fieldcalculator', alg_params)
 
-out31 = QgsVectorLayer("./out3.shp","out3","ogr")
+out31 = QgsVectorLayer("out3.shp","out3","ogr")
 if not out3.isValid():
   print ("out3 failed to load!")   
   
