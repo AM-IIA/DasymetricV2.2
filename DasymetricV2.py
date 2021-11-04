@@ -79,7 +79,7 @@ alg_params = {
 outputs['CalcolatoreCampi_class'] = processing.run('qgis:fieldcalculator', alg_params)
 
 # Calcolatore di campi_Factor #ATTENZIONE:per questa parte mi piacerebbe inserire una personalizzazione dei parametri da parte dell'utente(vedi allegato)
-#Processing.initialize()
+Processing.initialize()
 alg_params = {
     'FIELD_LENGTH': 2,
     'FIELD_NAME': 'Factor',
@@ -168,11 +168,11 @@ alg_params = {
     'FIELD_TYPE': 0,
     'FORMULA': '\"Factor\"*\"_count\"*100*\"Hint_mean\"',
     'INPUT': outputs['Int2']['OUTPUT'], #outputs['StatisticheZonaliHmean']['INPUT_VECTOR'],
-    'OUTPUT': "out1.shp"
+    'OUTPUT': "/home/out1.shp"
 }
 outputs['CalcolatoreCampoVoladj'] = processing.run('qgis:fieldcalculator', alg_params)
 
-out1 = QgsVectorLayer("out1.shp","out1","ogr")
+out1 = QgsVectorLayer("/home/out1.shp","out1","ogr")
 if not out1.isValid():
   print ("out1 failed to load!")
 
@@ -188,11 +188,11 @@ alg_params = {
     'KEEP_ATTRIBUTES': False,
     'OPTIONS': '',
     'STATISTICS_ATTRIBUTE': 'Vol_subel',
-    'OUTPUT': "outdiss1.shp"
+    'OUTPUT': "/home/outdiss1.shp"
 }
 outputs['Dissolvi'] = processing.run('gdal:dissolve', alg_params)
 
-outdiss1 = QgsVectorLayer("outdiss1.shp","outdiss1","ogr")
+outdiss1 = QgsVectorLayer("/home/outdiss1.shp","outdiss1","ogr")
 if not outdiss1.isValid():
   print ("outdiss1 failed to load!")
 
@@ -206,15 +206,16 @@ alg_params = {
     'INPUT_2': outputs['Dissolvi']['OUTPUT'],
     'METHOD': 1,
     'PREFIX': 'Vol_subel',
-    'OUTPUT': "out2.shp"
+    'OUTPUT': "/home/out2.shp"
 }
 outputs['UnisciAttributiSecondoIlValoreDelCampo'] = processing.run('native:joinattributestable', alg_params)
 
-out2 = QgsVectorLayer("out2.shp","out2","ogr")
+out2 = QgsVectorLayer("/home/out2.shp","out2","ogr")
 if not out2.isValid():
   print ("out2 failed to load!")
 
 # Calcolatore di campiPOPw
+Processing.initialize()
 alg_params = {
     'FIELD_LENGTH': 10,
     'FIELD_NAME': 'POPw',
@@ -222,11 +223,11 @@ alg_params = {
     'FIELD_TYPE': 0,
     'FORMULA': ' ( \"POP\" *  \"VOL_subel\")/ (\"Vol_subels\")',
     'INPUT': outputs['UnisciAttributiSecondoIlValoreDelCampo']['OUTPUT'],
-    'OUTPUT': "out3.shp"
+    'OUTPUT': "/home/out3.shp"
 }
 outputs['CalcolatoreDiCampipopw'] = processing.run('qgis:fieldcalculator', alg_params)
 
-out31 = QgsVectorLayer("out3.shp","out3","ogr")
+out31 = QgsVectorLayer("/home/out3.shp","out3","ogr")
 if not out3.isValid():
   print ("out3 failed to load!")   
   
@@ -247,6 +248,7 @@ alg_params = {
 outputs['Dissolvi2'] = processing.run('gdal:dissolve', alg_params)
 
 # Calcolatore di campi_finale
+Processing.initialize()
 alg_params = {
     'FIELD_LENGTH': 10,
     'FIELD_NAME': 'POPgrid',
