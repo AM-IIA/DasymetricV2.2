@@ -237,7 +237,7 @@ alg_params = {
     'COMPUTE_STATISTICS': True,
     'COUNT_FEATURES': False,
     'EXPLODE_COLLECTIONS': False,
-    'FIELD': 'ID_1',
+    'FIELD': 'id',
     'GEOMETRY': 'geometry',
     'INPUT': out3,
     'KEEP_ATTRIBUTES': False,
